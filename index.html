@@ -4,15 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To-Do List</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1>To-Do List</h1>
-  <form id="todo-form">
-    <input type="text" id="task" placeholder="New task" required>
-    <button type="submit">Add</button>
+  <form id="todoForm">
+    <div id="tasks">
+      <div class="task">
+        <input type="text" name="task" placeholder="Task" required>
+        <button type="button" class="removeTask" onclick="removeTask(this)">Remove</button>
+      </div>
+    </div>
+    <button type="button" onclick="addTask()">Add Task</button>
+    <button type="button" onclick="resetForm()">Reset</button>
   </form>
-  <ul id="todo-list"></ul>
-  <script src="js/scripts.js"></script>
+  <h2>Tasks:</h2>
+  <ul id="taskList">
+    <!-- Tasks will be listed here -->
+  </ul>
+  <script>
+    function addTask() {
+      const taskDiv = document.createElement('div');
+      taskDiv.className = 'task';
+      taskDiv.innerHTML = `
+        <input type="text" name="task" placeholder="Task" required>
+        <button type="button" class="removeTask" onclick="removeTask(this)">Remove</button>
+      `;
+      document.getElementById('tasks').appendChild(taskDiv);
+    }
+
+    function removeTask(button) {
+      button.parentElement.remove();
+    }
+
+    function resetForm() {
+      document.getElementById('todoForm').reset();
+      document.getElementById('tasks').innerHTML = `
+        <div class="task">
+          <input type="text" name="task" placeholder="Task" required>
+          <button type="button" class="removeTask" onclick="removeTask(this)">Remove</button>
+        </div>
+      `;
+      document.getElementById('taskList').innerHTML = '';
+    }
+
+    document.getElementById('todoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const tasks = document.getElementsByClassName('task');
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      
+      for (let i = 0; i < tasks.length; i++) {
+        const task = tasks[i].querySelector('input[name="task"]').value;
+        if (task) {
+          const li = document.createElement('li');
+          li.textContent = task;
+          taskList.appendChild(li);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
+
